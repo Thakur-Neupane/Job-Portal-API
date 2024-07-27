@@ -1,6 +1,7 @@
 import express from "express";
 const app = express();
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 const PORT = process.env.PORT || 8001;
 
 // MongoDB Connection
@@ -10,11 +11,22 @@ connectDb();
 // Middlewares
 import cors from "cors";
 import morgan from "morgan";
+import cookieParser from "cookie-parser";
 
-app.use(cors());
+app.use(
+  cors({
+    origin: [process.env.FRONTEND_URL],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 app.use(morgan("tiny"));
 
 // APIS
+
+// Storing cookie parser
+
+app.use(cookieParser());
 
 // Error Handlers
 app.get("/", (req, res, next) => {
