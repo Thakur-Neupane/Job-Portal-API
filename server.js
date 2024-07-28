@@ -12,6 +12,7 @@ connectDb();
 import cors from "cors";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
+import { errorMiddleware } from "./src/middlewares/error.js";
 
 app.use(
   cors({
@@ -21,6 +22,8 @@ app.use(
   })
 );
 app.use(morgan("tiny"));
+
+app.use(errorMiddleware);
 
 // APIS
 
