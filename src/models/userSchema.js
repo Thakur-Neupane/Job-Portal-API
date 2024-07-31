@@ -5,12 +5,13 @@ const userSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      minLength: [3, "Name Must Contain at lease 3 Characters."],
+      minLength: [3, "Name Must Contain at least 3 Characters."],
       maxLength: [30, "Name cannot exceed more than 30 characters."],
     },
     email: {
       type: String,
       required: true,
+      unique: true,
     },
     phone: {
       type: Number,
@@ -29,12 +30,12 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       minLength: [8, "Password must contain at least 8 characters."],
-      minLength: [32, "Password cant exceed more than 32 characters."],
     },
     resume: {
       public_id: String,
       url: String,
     },
+
     coverLetter: {
       type: String,
     },
@@ -49,4 +50,10 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-export default mongoose.model("User", userSchema); //Users
+userSchema.methods.getJWTToken = function () {
+  return jwt.sign({ id: this._id }, process.env.JWT_SECRET_KEY, {
+    expiresIn: process.env.JWT_EXPIRE,
+  });
+};
+
+export default mongoose.model("User", userSchema);
